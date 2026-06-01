@@ -1,0 +1,39 @@
+{
+  // AI Workspace - VSCode Settings
+  // These settings optimize the workspace for Copilot Agent Mode usage
+  
+  // Enable Copilot Agent Mode features
+  "github.copilot.chat.agent.enabled": true,
+  
+  // Files to include in @workspace context
+  "files.search.exclude": {
+    "**/node_modules": true,
+    "**/.git": true
+  },
+  
+  // Associate knowledge base markdown files
+  "files.associations": {
+    "knowledge-base/**/*.md": "markdown",
+    "agents/**/*.md": "markdown",
+    "agents/**/*.yaml": "yaml"
+  },
+  
+  // Terminal defaults for running tools
+  "terminal.integrated.defaultProfile.linux": "bash",
+  
+  // Search configuration
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.git": true
+  },
+  
+  // Copilot settings
+  "github.copilot.chat.codesearch.enabled": true,
+  
+  // Ensure knowledge-base is searchable
+  "search.include": [
+    "knowledge-base/**",
+    "agents/**",
+    ".github/**"
+  ]
+}
