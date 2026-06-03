@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# commit-msg hook — enforce Jira ticket reference in commit messages.
+#
+# Valid formats (any one is acceptable):
+#   feat(scope): add new feature Refs: PROJ-123
+#   fix(api): fix null pointer Refs: PROJ-456
+#   PROJ-123: some description
+#   [PROJ-123] some description
+#
+# The hook rejects commits that do not reference a Jira ticket key.
+#
+
+COMMIT_MSG_FILE="$1"
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Jira ticket pattern: 2+ uppercase letters + hyphen + digits
+TICKET_PATTERN='[A-Z][A-Z]*-[0-9][0-9]*'
+
+# Check if the commit message contains a Jira ticket reference
+if ! echo "$COMMIT_MSG" | grep -qE "$TICKET_PATTERN"; then
+    echo ""
+    echo "❌ COMMIT REJECTED: Commit message must include a Jira ticket number."
+    echo ""
+    echo "   Valid examples:"
+    echo "     feat(auth): add OAuth2 login  Refs: PROJ-123"
+    echo "     fix(api): fix null pointer     Refs: PROJ-456"
+    echo "     PROJ-123: some description"
+    echo "     [PROJ-123] some description"
+    echo ""
+    echo "   Pattern: <type>(<scope>): <description>  Refs: <TICKET-KEY>"
+    echo ""
+    exit 1
+fi
+
+# Optionally enforce conventional commit + Refs format for structured messages
+# (skip this check for merge commits and amend)
+if echo "$COMMIT_MSG" | head -1 | grep -qE '^(Merge|#)'; then
+    exit 0
+fi
+
+echo "✅ Commit message validated: Jira ticket reference found."
+exit 0

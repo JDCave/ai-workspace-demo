@@ -178,13 +178,15 @@ After creation, confirm the ticket key and URL.
 **Goal:** Commit the changes and provide a summary.
 
 1. Use the **git-kit** skill to check status and stage changes
-2. Generate a commit message following conventional commits:
+2. Generate a commit message following conventional commits with **mandatory** Jira ticket reference:
    ```
    <type>(<scope>): <description>
 
    Refs: <TICKET-KEY>
    ```
    Types: `feat`, `fix`, `refactor`, `test`, `docs`
+
+   ⚠️ **The `Refs: <TICKET-KEY>` line is mandatory.** A Git hook (`githooks/commit-msg`) will reject any commit that does not include a Jira ticket key (e.g., `PROJ-123`). The ticket key is captured from Step 1 or Step 3 and must be carried forward.
 3. Show the commit message preview
 4. **Ask for confirmation** before committing
 
@@ -204,7 +206,8 @@ After creation, confirm the ticket key and URL.
 - **NEVER skip checkpoints** — every 🛑 requires explicit user approval before proceeding
 - **NEVER commit to main/master** — always work on a feature branch
 - **NEVER auto-push** — the workflow stops at commit; pushing is the user's decision
-- **ALWAYS reference the Jira ticket** in commit messages and PR descriptions
+- **ALWAYS reference the Jira ticket** in commit messages (`Refs: <TICKET-KEY>`) — enforced by Git hook
+- **ALWAYS carry the ticket key** from Step 1/3 through the entire workflow
 - **ALWAYS run code review after coding** — even if the user doesn't ask
 - **ALWAYS generate tests** — no code ships without test coverage
 - **Handle errors gracefully** — if a step fails, explain the issue and offer alternatives

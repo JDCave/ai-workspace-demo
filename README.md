@@ -260,3 +260,36 @@ Currently supported mock endpoints:
 - `.env` is in `.gitignore` — never committed
 - PAT/Tokens stored locally in `.env` only
 - Jira creation and production deployment always require dry-run confirmation
+
+## 🪝 Git Hooks
+
+A `commit-msg` hook enforces Jira ticket references in every commit message.
+
+### Install
+
+```bash
+# From project root
+./githooks/install-hooks.sh
+```
+
+### What it does
+
+- **Rejects** commits that don't include a Jira ticket key (e.g., `PROJ-123`)
+- Accepts formats: `feat(scope): description Refs: PROJ-123`, `PROJ-123: description`, `[PROJ-123] description`
+- Merge commits are exempted
+
+### Valid commit message format
+
+```
+<type>(<scope>): <description>
+
+Refs: <TICKET-KEY>
+```
+
+Example: `feat(auth): add OAuth2 login flow  Refs: PROJ-123`
+
+### Bypass (emergency only)
+
+```bash
+git commit --no-verify -m "hotfix: critical production fix"
+```

@@ -130,6 +130,7 @@ requirement-analyst ──→ jira-creator ──→ tech-designer
 - **NEVER** expose API tokens, PATs, or credentials in output
 - **NEVER** commit to main/master — always work on a feature branch
 - **ALWAYS** confirm before creating Jira tickets or deploying to production (dry-run first)
+- **ALWAYS** include Jira ticket key in commit messages — enforced by Git hook (`Refs: <TICKET-KEY>`)
 - **ALWAYS** cite sources: `[Source: knowledge-base/team-alpha/xxx.md]` or `[Source: Confluence - "page title" (url)]`
 - Prefer local KB first (faster), then Confluence
 - Handle script errors gracefully, suggest manual steps
