@@ -234,6 +234,50 @@ def mock_status() -> dict:
     }
 
 
+def mock_checkout(branch: str, create: bool = False) -> dict:
+    """Mock git checkout — switch to or create a branch."""
+    if create:
+        return {
+            "success": True,
+            "action": "checkout_create",
+            "branch": branch,
+            "message": f"Created and switched to branch '{branch}'"
+        }
+    return {
+        "success": True,
+        "action": "checkout",
+        "branch": branch,
+        "message": f"Switched to branch '{branch}'"
+    }
+
+
+def mock_add(files: list = None, all_files: bool = False) -> dict:
+    """Mock git add — stage files."""
+    if all_files:
+        return {
+            "success": True,
+            "action": "add_all",
+            "message": "All changes staged"
+        }
+    return {
+        "success": True,
+        "action": "add",
+        "files": files or [],
+        "message": f"{len(files or [])} file(s) staged"
+    }
+
+
+def mock_commit(message: str) -> dict:
+    """Mock git commit — create a commit."""
+    return {
+        "success": True,
+        "action": "commit",
+        "hash": "f8e7d6c5",
+        "message": message,
+        "summary": "Commit created successfully"
+    }
+
+
 # ============================================================
 # CLI Entry Points
 # ============================================================
@@ -280,6 +324,25 @@ def cmd_status(args):
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
 
+def cmd_checkout(args):
+    """Handle checkout command."""
+    result = mock_checkout(branch=args.branch, create=args.create)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
+def cmd_add(args):
+    """Handle add command."""
+    files = args.files.split(",") if args.files else None
+    result = mock_add(files=files, all_files=args.all)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
+def cmd_commit(args):
+    """Handle commit command."""
+    result = mock_commit(message=args.message)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Git Operations Tool (Mock)")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -310,6 +373,20 @@ if __name__ == "__main__":
     # status
     status_parser = subparsers.add_parser("status", help="Show working tree status")
 
+    # checkout
+    checkout_parser = subparsers.add_parser("checkout", help="Switch or create branch")
+    checkout_parser.add_argument("--branch", "-b", required=True, help="Branch name to checkout")
+    checkout_parser.add_argument("--create", "-c", action="store_true", help="Create branch before checkout")
+
+    # add
+    add_parser = subparsers.add_parser("add", help="Stage files")
+    add_parser.add_argument("--files", "-f", default=None, help="Comma-separated file paths to stage")
+    add_parser.add_argument("--all", "-A", action="store_true", help="Stage all changes")
+
+    # commit
+    commit_parser = subparsers.add_parser("commit", help="Create a commit")
+    commit_parser.add_argument("--message", "-m", required=True, help="Commit message")
+
     args = parser.parse_args()
 
     if args.command == "diff":
@@ -322,5 +399,11 @@ if __name__ == "__main__":
         cmd_blame(args)
     elif args.command == "status":
         cmd_status(args)
+    elif args.command == "checkout":
+        cmd_checkout(args)
+    elif args.command == "add":
+        cmd_add(args)
+    elif args.command == "commit":
+        cmd_commit(args)
     else:
         parser.print_help()

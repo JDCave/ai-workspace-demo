@@ -68,6 +68,17 @@ requirement-analyst ──→ jira-creator ──→ tech-designer
 - `code-reviewer` → `requirement-analyst` (requirement clarification)
 - `ops-responder` → `requirement-analyst` (incident-driven new requirements)
 
+### ⭐ SDLC Orchestrator
+
+The **sdlc-orchestrator** is a master agent that drives the complete end-to-end workflow in one session:
+
+```
+Analyze Requirement → Create Jira Ticket → Setup Branch → Read Code →
+Implement → Generate Tests → Code Review → Fix Issues → Commit
+```
+
+It orchestrates all 8 skills through **10 checkpoint steps**, pausing for user confirmation at each gate. Select **"SDLC Orchestrator"** from the Chat dropdown to start a full development cycle.
+
 ## 📁 Directory Structure
 
 ```
@@ -95,7 +106,7 @@ ai-workspace-demo/
 │   │   ├── knowledge-base-kit/               #   Local KB search
 │   │   │   ├── SKILL.md
 │   │   │   └── kb_tool.py
-│   │   ├── git-kit/                          #   Git operations
+│   │   ├── git-kit/                          #   Git operations (diff, log, checkout, add, commit)
 │   │   │   ├── SKILL.md
 │   │   │   └── git_tool.py
 │   │   ├── test-runner-kit/                  #   Test execution & coverage
@@ -111,7 +122,8 @@ ai-workspace-demo/
 │   │       ├── SKILL.md
 │   │       └── monitor_tool.py
 │   └── agents/                               # ⑤ Custom Agents
-│       ├── requirement-analyst.agent.md      #   Requirements → Design → Jira
+│       ├── sdlc-orchestrator.agent.md         #   ⭐ Master orchestrator (end-to-end SDLC)
+│       ├── requirement-analyst.agent.md       #   Analysis → Handoff → Jira
 │       ├── jira-creator.agent.md             #   Jira ticket creation
 │       ├── knowledge-searcher.agent.md       #   Cross-source knowledge search
 │       ├── tech-designer.agent.md            #   Technical design documents
@@ -161,6 +173,7 @@ Choose from the Chat input dropdown to start a **multi-step Handoff workflow**:
 
 | Agent | Role | Handoff → |
 |-------|------|-----------|
+| ⭐ **SDLC Orchestrator** | End-to-end SDLC pipeline (10 steps) | Coordinates all agents |
 | **Requirement Analyst** | Analyze requirements with team context | → Jira Creator → Tech Designer |
 | **Jira Creator** | Create structured Jira tickets | → Tech Designer |
 | **Knowledge Searcher** | Cross-source search (KB + Confluence) | — |
@@ -222,7 +235,7 @@ Currently supported mock endpoints:
 | Type | Count | Details |
 |------|-------|---------|
 | **Skills** | 8 | confluence-kit, jira-kit, knowledge-base-kit, git-kit, test-runner-kit, code-review-kit, deploy-kit, monitor-kit |
-| **Agents** | 8 | requirement-analyst, jira-creator, knowledge-searcher, tech-designer, code-reviewer, test-engineer, release-manager, ops-responder |
+| **Agents** | 9 | sdlc-orchestrator ⭐, requirement-analyst, jira-creator, knowledge-searcher, tech-designer, code-reviewer, test-engineer, release-manager, ops-responder |
 | **Prompts** | 8 | /search-confluence, /search-knowledge-base, /analyze-requirement, /create-jira-ticket, /generate-bdd-tests, /review-my-code, /check-pipeline, /production-support |
 | **Instructions** | 2 | copilot-instructions.md (system), python-tools.instructions.md (conditional) |
 

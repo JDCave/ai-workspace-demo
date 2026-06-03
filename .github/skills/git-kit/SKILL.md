@@ -63,6 +63,32 @@ python .github/skills/git-kit/git_tool.py status
 
 Shows the current working tree status including staged, unstaged, and untracked files.
 
+### Checkout
+```bash
+python .github/skills/git-kit/git_tool.py checkout --branch <name> [--create]
+```
+
+**Parameters:**
+- `--branch` (required): Branch name to checkout
+- `--create`: Create the branch before checking out (like `git checkout -b`)
+
+### Add
+```bash
+python .github/skills/git-kit/git_tool.py add [--files <file1,file2>] [--all]
+```
+
+**Parameters:**
+- `--files`: Comma-separated list of file paths to stage
+- `--all`: Stage all changes (like `git add -A`)
+
+### Commit
+```bash
+python .github/skills/git-kit/git_tool.py commit --message "<commit message>"
+```
+
+**Parameters:**
+- `--message` (required): Commit message. Use conventional commit format: `<type>(<scope>): <description>`
+
 ## Important Rules
 - **ALWAYS** run `status` first before performing branch operations to understand the current state
 - Use `diff --stat` for a quick overview before showing full diffs

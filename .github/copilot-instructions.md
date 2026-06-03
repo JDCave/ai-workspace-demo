@@ -27,12 +27,13 @@ An **AI-assisted SDLC workbench** covering the complete software development lif
 │   ├── confluence-kit/         ← Confluence search & read
 │   ├── jira-kit/               ← Jira ticket CRUD
 │   ├── knowledge-base-kit/     ← Local KB search
-│   ├── git-kit/                ← Git operations (diff, log, branch, blame)
+│   ├── git-kit/                ← Git operations (diff, log, branch, checkout, add, commit)
 │   ├── test-runner-kit/        ← Test execution, coverage, gap analysis
 │   ├── code-review-kit/        ← Code review, standards check, security scan
 │   ├── deploy-kit/             ← Build, deploy, rollback, status
 │   └── monitor-kit/            ← Health, metrics, alerts, incident management
 └── agents/                     ← Custom agents (select in Chat dropdown)
+    ├── sdlc-orchestrator       ← Master orchestrator — end-to-end SDLC pipeline
     ├── requirement-analyst     ← Requirement analysis with handoffs
     ├── jira-creator            ← Jira ticket creation
     ├── knowledge-searcher      ← Cross-source knowledge search
@@ -50,7 +51,7 @@ This workspace includes eight skills that Copilot automatically loads when relev
 - **confluence-kit** — Activated when the user asks to search or read Confluence pages
 - **jira-kit** — Activated when the user asks to create, search, or update Jira tickets
 - **knowledge-base-kit** — Activated when the user asks about team documentation
-- **git-kit** — Activated when the user asks about code changes, commit history, branches, or blame
+- **git-kit** — Activated when the user asks about code changes, branches, commits, or git operations
 - **test-runner-kit** — Activated when the user asks to run tests, check coverage, or find test gaps
 - **code-review-kit** — Activated when the user asks for code review, PR analysis, or code quality checks
 - **deploy-kit** — Activated when the user asks to deploy, build, rollback, or check deployment status
@@ -61,9 +62,20 @@ Copilot will follow the instructions in the matched skill to execute the appropr
 
 **Do NOT hardcode script paths in your responses.** Rely on the skills — they provide the exact commands and parameters.
 
+## ⭐ SDLC Orchestrator (Recommended Starting Point)
+
+The **sdlc-orchestrator** agent drives the complete end-to-end workflow:
+
+```
+Analyze Requirement → Create Jira Ticket → Setup Branch → Read Code →
+Implement → Generate Tests → Code Review → Fix Issues → Commit
+```
+
+It pauses at each step for user confirmation (10 checkpoints total) and coordinates all skills automatically. Select **"SDLC Orchestrator"** from the Chat dropdown to start.
+
 ## SDLC Workflow (Agent Handoff Chain)
 
-The SDLC flows through agents via handoff buttons:
+Individual agents can also be used independently via Handoff buttons:
 
 ```
 requirement-analyst ──→ jira-creator ──→ tech-designer
@@ -80,6 +92,11 @@ requirement-analyst ──→ jira-creator ──→ tech-designer
 - `ops-responder` → `requirement-analyst` (incident-driven new requirements)
 
 ## Agent Behaviors
+
+### When User Wants End-to-End Development
+1. Select **sdlc-orchestrator** from the agent dropdown
+2. It will guide through all 10 steps with checkpoints
+3. Coordinates all skills automatically
 
 ### When User Asks to Search Knowledge
 1. Determine scope: Confluence, local KB, or both
@@ -111,6 +128,7 @@ requirement-analyst ──→ jira-creator ──→ tech-designer
 ## Important Rules
 
 - **NEVER** expose API tokens, PATs, or credentials in output
+- **NEVER** commit to main/master — always work on a feature branch
 - **ALWAYS** confirm before creating Jira tickets or deploying to production (dry-run first)
 - **ALWAYS** cite sources: `[Source: knowledge-base/team-alpha/xxx.md]` or `[Source: Confluence - "page title" (url)]`
 - Prefer local KB first (faster), then Confluence
