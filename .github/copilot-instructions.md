@@ -1,17 +1,20 @@
 # AI Workspace - Copilot Custom Instructions
 
-> This workspace equips GitHub Copilot with knowledge-search and Jira-integration capabilities.
+> This workspace equips GitHub Copilot with a full SDLC (Software Development Lifecycle) toolchain.
 > All instructions below are automatically applied to every Copilot Chat session.
 
 ---
 
 ## Workspace Purpose
 
-An **AI-assisted workbench** providing three core capabilities:
+An **AI-assisted SDLC workbench** covering the complete software development lifecycle:
 
-1. **Confluence Knowledge Search** — Search internal Confluence wikis
-2. **Local Knowledge Base** — Search team-specific documents in `knowledge-base/`
-3. **Requirement Analysis → Jira Ticket** — Analyze requirements with team context, create structured tickets
+1. **Requirements** — Analyze requirements, create Jira tickets
+2. **Design** — Produce technical design documents
+3. **Code Review** — Analyze code changes, enforce standards, detect security issues
+4. **Testing** — Run tests, analyze coverage, generate BDD test cases
+5. **Release** — Build, deploy, rollback, release notes
+6. **Operations** — Monitor health, handle incidents, manage alerts
 
 ## Workspace Structure
 
@@ -23,25 +26,58 @@ An **AI-assisted workbench** providing three core capabilities:
 ├── skills/                     ← Agent skills (auto-loaded when relevant)
 │   ├── confluence-kit/         ← Confluence search & read
 │   ├── jira-kit/               ← Jira ticket CRUD
-│   └── knowledge-base-kit/     ← Local KB search
+│   ├── knowledge-base-kit/     ← Local KB search
+│   ├── git-kit/                ← Git operations (diff, log, branch, blame)
+│   ├── test-runner-kit/        ← Test execution, coverage, gap analysis
+│   ├── code-review-kit/        ← Code review, standards check, security scan
+│   ├── deploy-kit/             ← Build, deploy, rollback, status
+│   └── monitor-kit/            ← Health, metrics, alerts, incident management
 └── agents/                     ← Custom agents (select in Chat dropdown)
     ├── requirement-analyst     ← Requirement analysis with handoffs
     ├── jira-creator            ← Jira ticket creation
-    └── knowledge-searcher      ← Cross-source knowledge search
+    ├── knowledge-searcher      ← Cross-source knowledge search
+    ├── tech-designer           ← Technical design documents
+    ├── code-reviewer           ← Code review with automated analysis
+    ├── test-engineer           ← Test execution and coverage
+    ├── release-manager         ← Release and deployment management
+    └── ops-responder           ← Production incident response
 ```
 
 ## How Skills Work
 
-This workspace includes three skills that Copilot automatically loads when relevant:
+This workspace includes eight skills that Copilot automatically loads when relevant:
 
 - **confluence-kit** — Activated when the user asks to search or read Confluence pages
 - **jira-kit** — Activated when the user asks to create, search, or update Jira tickets
 - **knowledge-base-kit** — Activated when the user asks about team documentation
+- **git-kit** — Activated when the user asks about code changes, commit history, branches, or blame
+- **test-runner-kit** — Activated when the user asks to run tests, check coverage, or find test gaps
+- **code-review-kit** — Activated when the user asks for code review, PR analysis, or code quality checks
+- **deploy-kit** — Activated when the user asks to deploy, build, rollback, or check deployment status
+- **monitor-kit** — Activated when the user asks about system health, metrics, alerts, or incidents
 
 Each skill contains a `SKILL.md` with usage instructions and a Python CLI tool.
 Copilot will follow the instructions in the matched skill to execute the appropriate commands.
 
 **Do NOT hardcode script paths in your responses.** Rely on the skills — they provide the exact commands and parameters.
+
+## SDLC Workflow (Agent Handoff Chain)
+
+The SDLC flows through agents via handoff buttons:
+
+```
+requirement-analyst ──→ jira-creator ──→ tech-designer
+       ↑                                      ↓
+       │                               code-reviewer
+       ↑                                      ↓
+       │                               test-engineer
+       ↑                                      ↓
+       └──────── ops-responder ←── release-manager
+```
+
+**Back loops** (closing the loop):
+- `code-reviewer` → `requirement-analyst` (clarification needed)
+- `ops-responder` → `requirement-analyst` (incident-driven new requirements)
 
 ## Agent Behaviors
 
@@ -55,17 +91,27 @@ Copilot will follow the instructions in the matched skill to execute the appropr
 1. Load team context from `knowledge-base/<team>/`
 2. Analyze: functional + non-functional requirements, impact, acceptance criteria
 3. Present for user review before creating tickets
+4. Handoff options: create tickets, search more, or proceed to design
 
-### When User Asks to Create Jira Tickets
-1. Confirm project key, ticket type, team
-2. Generate structured content
-3. **Always dry-run first** — show preview, get confirmation
-4. Create and report ticket URL
+### When User Asks for Code Review
+1. Use git-kit to gather changes
+2. Use code-review-kit to analyze, check standards, scan security
+3. Present findings by severity with actionable recommendations
+
+### When User Asks About Deployment
+1. Use deploy-kit to check status or build
+2. ALWAYS dry-run first for production
+3. ALWAYS get user confirmation before deploying
+
+### When User Reports an Incident
+1. Use monitor-kit to triage — check health, alerts, metrics
+2. Use jira-kit to create incident ticket
+3. For critical issues, handoff to ops-responder agent
 
 ## Important Rules
 
 - **NEVER** expose API tokens, PATs, or credentials in output
-- **ALWAYS** confirm before creating Jira tickets (dry-run first)
+- **ALWAYS** confirm before creating Jira tickets or deploying to production (dry-run first)
 - **ALWAYS** cite sources: `[Source: knowledge-base/team-alpha/xxx.md]` or `[Source: Confluence - "page title" (url)]`
 - Prefer local KB first (faster), then Confluence
 - Handle script errors gracefully, suggest manual steps
@@ -79,4 +125,7 @@ Copilot will follow the instructions in the matched skill to execute the appropr
 | `/search-knowledge-base` | Search local team docs |
 | `/analyze-requirement` | Structured requirement analysis |
 | `/create-jira-ticket` | Create Jira tickets |
+| `/generate-bdd-tests` | Generate BDD (Given-When-Then) test cases |
+| `/review-my-code` | Full code review with standards and security |
+| `/check-pipeline` | Check CI/CD pipeline and deployment health |
 | `/production-support` | Production incident workflow |

@@ -7,6 +7,10 @@ handoffs:
     agent: requirement-analyst
     prompt: I have a new requirement that needs analysis.
     send: false
+  - label: Proceed to Design
+    agent: tech-designer
+    prompt: Tickets created. Proceed to technical design for the next iteration.
+    send: false
 ---
 
 # Jira Ticket Creator Agent

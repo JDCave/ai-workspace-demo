@@ -11,6 +11,10 @@ handoffs:
     agent: knowledge-searcher
     prompt: Search for more knowledge base and Confluence documents related to the requirement above.
     send: false
+  - label: Proceed to Design
+    agent: tech-designer
+    prompt: The requirement analysis is approved. Produce a technical design document based on the analysis above.
+    send: false
 ---
 
 # Requirement Analyst Agent

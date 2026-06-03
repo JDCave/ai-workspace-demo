@@ -41,9 +41,17 @@ Show the user:
 
 Use the **jira-kit** skill to create an incident ticket with appropriate severity, labels, and description.
 
-## Phase 5: Post-Incident
+## Phase 5: Monitor and Escalate
+
+Use the **monitor-kit** skill to check current service health and active alerts related to this incident.
+
+If critical:
+- Hand off to the **ops-responder** agent for full incident management workflow.
+
+## Phase 6: Post-Incident
 
 After resolution, offer to:
 1. Generate post-mortem document
 2. Save lessons learned to `knowledge-base/<team>/runbooks/`
 3. Update runbooks with new scenario
+4. Hand off to **requirement-analyst** agent if the incident revealed a systemic gap (closes the SDLC loop)
